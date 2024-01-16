@@ -4,13 +4,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter(value = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class FamilyMember {
+
+    private final Long id;
 
     private final String name;
 
@@ -18,29 +18,42 @@ public class FamilyMember {
 
     private FamilyMember mother;
 
-    public FamilyMember(String name){
-        this.name=name;
+    public Set<FamilyMember> getAncestors(){
+
+        Set<FamilyMember> ancestors = new HashSet<>(Collections.singleton(this));
+        if(this.father != null){
+            ancestors.add(this.father);
+            ancestors.addAll(this.father.getAncestors());
+        }
+        if(this.mother != null){
+            ancestors.add(this.mother);
+            ancestors.addAll(this.mother.getAncestors());
+        }
+        return ancestors;
     }
 
-    public String getAncestors(){
+    public String printAncestors(){
+
         return this.name +
-                "[" + getParentsAncestors(this.father) +
+                "[" + printParentsAncestors(this.father) +
                 "],[" +
-                getParentsAncestors(this.mother) +
+                printParentsAncestors(this.mother) +
                 "]";
     }
 
-    private String getParentsAncestors(FamilyMember parent){
-        return parent == null ? "" : parent.getAncestors();
+    private String printParentsAncestors(FamilyMember parent){
+
+        return parent == null ? "" : parent.printAncestors();
     }
 
     public Set<FamilyMember> getOldestAncestors(){
+
         Set<FamilyMember> oldestAncestors = new HashSet();
         this.getOldestAncestors(oldestAncestors);
         return oldestAncestors;
     }
 
-    private void getOldestAncestors(Set<FamilyMember> ancestors ){
+    private void getOldestAncestors(Set<FamilyMember> ancestors) {
 
         if(this.father == null && this.mother == null){
             ancestors.add(this);
@@ -54,6 +67,7 @@ public class FamilyMember {
     }
 
     public boolean isAncestor(FamilyMember candidate){
+
         if( this.father == candidate || this.mother == candidate){
             return true;
         }
