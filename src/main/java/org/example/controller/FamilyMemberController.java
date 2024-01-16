@@ -34,28 +34,28 @@ public class FamilyMemberController {
     }
 
     @PermitAll
-    @PostMapping("/find-ancestors/{id}")
+    @GetMapping("/find-ancestors/{id}")
     public String findAncestors(@PathVariable Long id){
 
         return this.familyMemberService.findAncestors(id);
     }
 
     @PermitAll
-    @PostMapping("/cousins-check/{fm1}/{fm2}")
+    @GetMapping("/cousins-check/{fm1}/{fm2}")
     public boolean cousinsCheck(@PathVariable Long fm1, @PathVariable Long fm2){
 
         return this.familyMemberService.areCosines(fm1, fm2);
     }
 
     @PermitAll
-    @PostMapping("/common-ancestor-check/{fm1}/{fm2}")
+    @GetMapping("/common-ancestor-check/{fm1}/{fm2}")
     public boolean commonAncestorCheck(@PathVariable Long fm1, @PathVariable Long fm2){
 
         return this.familyMemberService.hasSharedAncestors(fm1, fm2);
     }
 
     @PermitAll
-    @PostMapping("/display-graph/{id}")
+    @GetMapping("/display-graph/{id}")
     public List<FamilyMemberDto> displayGraph(@PathVariable Long id){
 
         return this.familyMemberService.displayGraph(id);
@@ -71,15 +71,5 @@ public class FamilyMemberController {
         this.familyMemberValidator.validateNewGraph(fms);
         this.familyMemberService.addGraph(fms);
         return this.familyMemberService.displayGraph(fms.get(1).getId());
-    }
-
-    @PermitAll
-    @PostMapping("test")
-    public List<FamilyMemberDto> appGraph(){
-
-        List<FamilyMemberDto> rtr = new ArrayList<>();
-        //rtr.add(new FamilyMemberDto());
-        //rtr.add(new FamilyMemberDto());
-        return rtr;
     }
 }
